@@ -13,15 +13,50 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
+ function transform(arr) {
+
 function delStr(str){
   if (str != "--discard-next" && str != "--discard-prev" && str != "--double-next" && str != "--double-prev") 
   return str;
 }
+function doubleNext(result, j){
+  if(j==(result.length-1) || del) return result;
+  else {result.splice(j,1,result[++j]); ;return result;}
+}
+function doublePrev(result, j){
+  if(j==0 || del) return ;
+  else{ result.splice(j,1,result[--j]); return result}
+}
+function discardPrev(result, j){
+  if(j==0) {
+    console.log(j)
+    return result;}
+  else {
+    del = true; 
+    result.splice(--j,1);
+    return result}
+}
+function discardNext(result, j){
+  if(j==(result.length-1) || del){ console.log(result[j]); return result; }
+  else{    del = true; result.splice(++j,1);  console.log(result); return result}
+}
 
-function transform(arr) {
-  // if (!Array.isArray(arr))
-  // throw new Error("'arr' parameter must be an instance of the Array!");
-  // let result = arr;
+
+  if (!Array.isArray(arr))
+  throw new Error("'arr' parameter must be an instance of the Array!");
+  let result = [...arr]
+  let del = false;
+  for (i in result){
+    switch (result[i]){
+      case '--double-next': doubleNext(result, i); break;
+      case '--double-prev': doublePrev(result, i); break;
+      case '--discard-next': discardNext(result, i); break;
+      case '--discard-prev': discardPrev(result, i); break;
+    }
+  }
+return result.filter(delStr);
+
+
   // for (let i = 0; i < arr.length; i++){
   //   if (typeof result[i] != 'string'){
   //     // result.push(arr[i]);
@@ -63,9 +98,8 @@ function transform(arr) {
   //       }
   //     }
   // }
-  return 0;
 }
-console.log(transform([1, 2, 3, '--double-next', 1337, '--double-prev', 4, 5]))
+console.log(transform(['--discard-prev', 1, 2, 3]))
 module.exports = {
   transform
 };
