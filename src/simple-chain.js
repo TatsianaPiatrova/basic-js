@@ -12,14 +12,16 @@ const chainMaker = {
   },
   addLink(value) {
     if(arguments.length === 0) this.chain.push('()');
-    else this.chain.push(`(${value})`);
+    else this.chain.push(`( ${value} )`);
     return this;
   },
   removeLink(position) {
-    if (typeof position !== 'number' || (position^0) !== position)
+    if (typeof position !== 'number' || (position^0) !== position){
+        this.chain = [];
         throw new Error("You can't remove incorrect link!");
+    }
     position--;
-    if( position>=this.chain.getLength() || position<0){
+    if( position>=this.chain.length || position<0){
       this.chain = []
       throw new Error("You can't remove incorrect link!");
     }
@@ -27,14 +29,16 @@ const chainMaker = {
     return this;
   },
   reverseChain() {
-    return this.chain.reverse();
+    this.chain.reverse();
+    return this;
   },
   finishChain() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    let newchain = this.chain.join("~~");
+    this.chain = [];
+    return newchain;
   }
 };
-
+//console.log(chainMaker.addLink(function () { }).addLink('2nd').addLink('3rd').removeLink(2).reverseChain().finishChain())
 module.exports = {
   chainMaker
 };
